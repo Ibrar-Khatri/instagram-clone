@@ -4,7 +4,6 @@ import styles from './style';
 const InputComment = () => {
   const [newComment, setNewComment] = useState('');
   const onPost = () => {
-    console.log('Posting');
     setNewComment('');
   };
   return (
