@@ -1,5 +1,7 @@
+import {useState} from 'react';
 import {Controller, useForm} from 'react-hook-form';
 import {View, Image, Text, TextInput, ScrollView} from 'react-native';
+import {launchImageLibrary} from 'react-native-image-picker';
 import user from '../../assets/data/user.json';
 import colors from '../../theme/colors';
 import styles from './style';
@@ -37,6 +39,7 @@ const CustomInput = ({label, multiline, control, name, rules}) => (
 );
 
 const EditProfileScreen = () => {
+  const [selectedPhoto, setSelectedPhoto] = useState(null);
   const {
     control,
     handleSubmit,
@@ -53,10 +56,24 @@ const EditProfileScreen = () => {
   const onSubmit = data => {
     console.log('🚀 ~ data', data);
   };
+  const changePhoto = () => {
+    launchImageLibrary(
+      {mediaType: 'photo'},
+      ({didCancel, errorCode, errorMessage, assets}) => {
+        if (!didCancel && !errorCode && assets.length > 0)
+          setSelectedPhoto(assets[0]);
+      },
+    );
+  };
   return (
     <ScrollView contentContainerStyle={styles.page}>
-      <Image source={{uri: user.image}} style={styles.avatar} />
-      <Text style={styles.textButton}>Change profile button</Text>
+      <Image
+        source={{uri: selectedPhoto?.uri || user.image}}
+        style={styles.avatar}
+      />
+      <Text style={styles.textButton} onPress={changePhoto}>
+        Change profile button
+      </Text>
       <CustomInput
         name="name"
         control={control}
