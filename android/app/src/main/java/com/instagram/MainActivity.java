@@ -1,4 +1,3 @@
-import expo.modules.ReactActivityDelegateWrapper;
 package com.instagram;
 
 import com.facebook.react.ReactActivity;
@@ -22,7 +21,7 @@ public class MainActivity extends ReactActivity {
    */
   @Override
   protected ReactActivityDelegate createReactActivityDelegate() {
-    return new ReactActivityDelegateWrapper(this, new MainActivityDelegate(this, getMainComponentName()));
+    return new MainActivityDelegate(this, getMainComponentName());
   }
 
   public static class MainActivityDelegate extends ReactActivityDelegate {
