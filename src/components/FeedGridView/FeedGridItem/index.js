@@ -14,7 +14,7 @@ const FeedGridItem = ({post}) => {
       {post?.images && (
         <MaterialIcons
           name="collections"
-          color={colors.while}
+          color={colors.white}
           style={style.iconStyle}
         />
       )}

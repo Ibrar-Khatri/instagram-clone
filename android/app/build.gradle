@@ -170,6 +170,7 @@ android {
                 }
             }
         }
+          missingDimensionStrategy 'react-native-camera', 'general' // <--- insert this line
     }
 
     if (isNewArchitectureEnabled()) {

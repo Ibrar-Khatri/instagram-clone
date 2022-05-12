@@ -37,7 +37,7 @@ const Carousel = ({images, onDoublePress}) => {
               styles.dotStyle,
               {
                 backgroundColor:
-                  activeImage === i ? colors.primary : colors.while,
+                  activeImage === i ? colors.primary : colors.white,
               },
             ]}
           />

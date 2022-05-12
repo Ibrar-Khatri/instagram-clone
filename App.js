@@ -4,14 +4,15 @@ import CommentsScreen from './src/screens/CommentsScreen';
 import ProfileScreen from './src/screens/ProfileScreen';
 import EditProfileScreen from './src/screens/EditProfileScreen';
 import PostUploadScreen from './src/screens/PostUploadScreen';
+import colors from './src/theme/colors';
 
 const App = () => {
   return (
     <View style={styles.app}>
       {/* <CommentsScreen /> */}
       {/* <HomeScreen /> */}
-      {/* <ProfileScreen />
-       */}
+      {/* <ProfileScreen /> */}
+
       {/* <EditProfileScreen /> */}
       <PostUploadScreen />
     </View>
@@ -19,7 +20,7 @@ const App = () => {
 };
 
 const styles = StyleSheet.create({
-  app: {flex: 1},
+  app: {flex: 1, backgroundColor: colors.white},
 });
 
 export default App;
