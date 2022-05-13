@@ -19,6 +19,9 @@ export default StyleSheet.create({
     fontWeight: weight.full,
     color: colors.black,
   },
+  text: {
+    color: colors.black,
+  },
   name: {
     fontWeight: weight.semi,
     color: colors.black,

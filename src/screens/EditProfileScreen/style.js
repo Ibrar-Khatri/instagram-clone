@@ -26,9 +26,11 @@ export default StyleSheet.create({
   label: {
     width: 75,
     textAlignVertical: 'center',
+    color: colors.black,
   },
   input: {
     borderBottomWidth: 1,
+    color: colors.black,
   },
   errorText: {
     color: colors.error,

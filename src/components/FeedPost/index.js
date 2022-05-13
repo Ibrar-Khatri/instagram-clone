@@ -7,10 +7,19 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import Feather from 'react-native-vector-icons/Feather';
 import styles from './style';
 import {Comment, DoublePressable, Carousel, VideoPlayer} from '../index';
+import {useNavigation} from '@react-navigation/native';
 
 const FeedPost = ({post, isVisible}) => {
   const [isDescExpended, setIsDescExpended] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
+  const navigation = useNavigation();
+
+  const navigateToUser = () => {
+    navigation.navigate('UserProfile', {userId: post.user.id});
+  };
+  const navigateToComments = () => {
+    navigation.navigate('Comments', {postId: post.id});
+  };
   const toggleDescExpanded = () => {
     setIsDescExpended(v => !v);
   };
@@ -46,11 +55,14 @@ const FeedPost = ({post, isVisible}) => {
             }}
             style={styles.avatarStyle}
           />
-          <Text style={styles.userName}>{post?.user?.username}</Text>
+          <Text style={styles.userName} onPress={navigateToUser}>
+            {post?.user?.username}
+          </Text>
           <Entypo
             name="dots-three-horizontal"
             size={16}
             style={styles.threeDots}
+            color={colors.black}
           />
         </View>
         {content}
@@ -95,7 +107,9 @@ const FeedPost = ({post, isVisible}) => {
             {isDescExpended ? 'less' : 'more'}
           </Text>
 
-          <Text>View all {post.nofComments} comments</Text>
+          <Text onPress={navigateToComments}>
+            View all {post.nofComments} comments
+          </Text>
           {post.comments.map((com, i) => (
             <Comment key={i} comment={com} />
           ))}
