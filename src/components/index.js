@@ -5,7 +5,7 @@ import Carousel from './Carousel';
 import VideoPlayer from './VideoPlayer';
 import Button from './Button';
 import FeedGridView from './FeedGridView';
-
+import UserListItem from './UserListItem';
 export {
   FeedPost,
   Comment,
@@ -14,4 +14,5 @@ export {
   VideoPlayer,
   Button,
   FeedGridView,
+  UserListItem,
 };
