@@ -1,46 +1,23 @@
-import React, {PureComponent, useState, useEffect, useRef} from 'react';
-import {
-  AppRegistry,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import React, {useState, useRef} from 'react';
+import {View, Pressable} from 'react-native';
 import {RNCamera} from 'react-native-camera';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import colors from '../../theme/colors';
+import styles from './style';
+
+const flashModeToIcon = {
+  [RNCamera.Constants.FlashMode.off]: 'flash-off',
+  [RNCamera.Constants.FlashMode.on]: 'flash-on',
+  [RNCamera.Constants.FlashMode.torch]: 'highlight',
+  [RNCamera.Constants.FlashMode.auto]: 'flash-auto',
+};
 
 const PostUploadScreen = () => {
   let [flash, setFlash] = useState(0);
-
-  let [zoom, setZoom] = useState(0);
-  let [autoFocus, setAutoFocus] = useState('on');
-  let [depth, setDepth] = useState(0);
   let [type, setType] = useState(RNCamera.Constants.Type.back);
-  let [permission, setPermission] = useState('undetermined');
+  const [isCameraReady, setIsCameraReady] = useState(false);
+  const [isRecording, setIsRecording] = useState(false);
   let cameraRef = useRef(null);
-
-  const toggleFlash = () => {
-    setFlash(v =>
-      v === RNCamera.Constants.FlashMode.torch
-        ? 0
-        : RNCamera.Constants.FlashMode.torch,
-    );
-  };
-  const zoomOut = () => {
-    setZoom(zoom - 0.1 < 0 ? 0 : zoom - 0.1);
-  };
-  const zoomIn = () => {
-    setZoom(zoom + 0.1 > 1 ? 1 : zoom + 0.1);
-  };
-
-  const takePicture = async () => {
-    if (cameraRef) {
-      const options = {quality: 0.5, base64: true};
-      const data = await cameraRef.current.takePictureAsync(soptions);
-      console.log(data.uri);
-    }
-  };
 
   const toggleType = () => {
     setType(v =>
@@ -49,6 +26,44 @@ const PostUploadScreen = () => {
         : RNCamera.Constants.Type.back,
     );
   };
+  const toggleFlash = () => {
+    setFlash(v => (v === RNCamera.Constants.FlashMode.auto ? 0 : v + 1));
+  };
+
+  const startRecording = async () => {
+    if (!isCameraReady || !cameraRef.current || isRecording) {
+      return;
+    }
+    const options = {
+      quality: RNCamera.Constants.VideoQuality['640:480'],
+      maxDuraion: 60,
+      maxFileSize: 10 * 1024 * 1024,
+      mute: false,
+    };
+    setIsRecording(true);
+    try {
+      const data = await cameraRef.current.recordAsync(options);
+      console.log('🚀 ~ data', data);
+    } catch (e) {
+      console.log('🚀 ~ e', e);
+    }
+    setIsRecording(false);
+  };
+  const stopRecording = () => {
+    if (isRecording) {
+      cameraRef.current.stopRecording();
+      setIsRecording(false);
+    }
+  };
+
+  const takePicture = async () => {
+    if (!cameraRef.current || !isCameraReady || isRecording) {
+    }
+    const options = {quality: 0.5, base64: false, skipProcessing: true};
+    const data = await cameraRef.current.takePictureAsync(options);
+    console.log(data.uri);
+  };
+
   return (
     <View style={styles.page}>
       <RNCamera
@@ -57,11 +72,12 @@ const PostUploadScreen = () => {
         type={type}
         flashMode={flash}
         aspectRatio={4 / 3}
+        onCameraReady={() => setIsCameraReady(true)}
       />
       <View style={[styles.buttonsContainer, {top: 25}]}>
         <MaterialIcons name="close" size={30} color={colors.white} />
         <MaterialIcons
-          name="flash-off"
+          name={flashModeToIcon[flash]}
           size={30}
           color={colors.white}
           onPress={toggleFlash}
@@ -70,7 +86,19 @@ const PostUploadScreen = () => {
       </View>
       <View style={[styles.buttonsContainer, {bottom: 25}]}>
         <MaterialIcons name="photo-library" size={30} color={colors.white} />
-        <View style={styles.circle} />
+        {isCameraReady && (
+          <Pressable
+            onPress={takePicture}
+            onLongPress={startRecording}
+            onPressOut={stopRecording}>
+            <View
+              style={[
+                styles.circle,
+                {backgroundColor: isRecording ? colors.accent : colors.white},
+              ]}
+            />
+          </Pressable>
+        )}
         <MaterialIcons
           name="flip-camera-ios"
           size={30}
@@ -81,30 +109,5 @@ const PostUploadScreen = () => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  page: {
-    flex: 1,
-    justifyContent: 'center',
-    backgroundColor: colors.black,
-  },
-  camera: {
-    width: '100%',
-    aspectRatio: 3 / 4,
-  },
-  buttonsContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    width: '100%',
-    alignItems: 'center',
-    position: 'absolute',
-  },
-  circle: {
-    width: 75,
-    aspectRatio: 1,
-    borderRadius: 75,
-    backgroundColor: colors.white,
-  },
-});
 
 export default PostUploadScreen;
