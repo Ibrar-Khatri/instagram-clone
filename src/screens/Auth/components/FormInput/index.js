@@ -1,6 +1,7 @@
 import React from 'react';
 import {View, Text, TextInput, StyleSheet} from 'react-native';
 import {Controller} from 'react-hook-form';
+import colors from '../../../../theme/colors';
 
 function FormInput({
   control,
@@ -55,6 +56,7 @@ const styles = StyleSheet.create({
   },
   input: {
     height: 50,
+    color: colors.black,
   },
 });
 

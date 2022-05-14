@@ -5,18 +5,21 @@ import {useForm} from 'react-hook-form';
 import {CustomButton, FormInput} from '../components';
 import {Auth} from 'aws-amplify';
 
+const EMAIL_REGEX =
+  /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+
 const NewPasswordScreen = () => {
   const {control, handleSubmit} = useForm();
   const navigation = useNavigation();
   const [loading, setLoading] = useState(false);
 
-  const onSubmitPressed = async ({username, code, password}) => {
+  const onSubmitPressed = async ({email, code, password}) => {
     if (loading) {
       return;
     }
     setLoading(true);
     try {
-      await Auth.forgotPasswordSubmit(username, code, password);
+      await Auth.forgotPasswordSubmit(email, code, password);
       navigation.navigate('Sign in');
     } catch (e) {
       Alert.alert('Oops', e?.message);
@@ -35,10 +38,13 @@ const NewPasswordScreen = () => {
         <Text style={styles.title}>Reset your password</Text>
 
         <FormInput
-          placeholder="Username"
-          name="username"
+          placeholder="Email"
+          name="email"
           control={control}
-          rules={{required: 'Username is required'}}
+          rules={{
+            required: 'Email is required',
+            pattern: {value: EMAIL_REGEX, message: 'Email is invalid'},
+          }}
         />
 
         <FormInput

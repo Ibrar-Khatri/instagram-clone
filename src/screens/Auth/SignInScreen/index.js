@@ -14,6 +14,8 @@ import {CustomButton, FormInput, SocialSignInButtons} from '../components';
 import {Auth} from 'aws-amplify';
 import {useAuthContext} from '../../../contexts/AuthContext';
 
+const EMAIL_REGEX =
+  /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
 const SignInScreen = () => {
   const {height} = useWindowDimensions();
   const navigation = useNavigation();
@@ -21,17 +23,17 @@ const SignInScreen = () => {
   const [loading, setLoading] = useState(false);
   const {setUser} = useAuthContext();
 
-  const onSignInPressed = async ({username, password}) => {
+  const onSignInPressed = async ({email, password}) => {
     if (loading) {
       return;
     }
     setLoading(true);
     try {
-      const cognitoUser = await Auth.signIn(username, password);
+      const cognitoUser = await Auth.signIn(email, password);
       setUser(cognitoUser);
     } catch (e) {
       if (e?.name === 'UserNotConfirmedException') {
-        navigation.navigate('Confirm email', {username});
+        navigation.navigate('Confirm email', {email});
       } else {
         Alert.alert('Ooops', e?.message);
       }
@@ -59,10 +61,13 @@ const SignInScreen = () => {
         />
 
         <FormInput
-          name="username"
-          placeholder="Username"
+          name="email"
+          placeholder="Email"
           control={control}
-          rules={{required: 'Username is required'}}
+          rules={{
+            required: 'Email is required',
+            pattern: {value: EMAIL_REGEX, message: 'Email is invalid'},
+          }}
         />
 
         <FormInput

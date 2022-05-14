@@ -9,30 +9,27 @@ import {Auth} from 'aws-amplify';
 const EMAIL_REGEX =
   /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
 
-const USERNAME_REGEX = /^[a-zA-Z0-9_]*$/; // alphanumeric and underscore
-
 const SignUpScreen = () => {
   const {control, handleSubmit, watch} = useForm();
   const pwd = watch('password');
   const navigation = useNavigation();
   const [loading, setLoading] = useState(false);
 
-  const onRegisterPressed = async ({name, email, username, password}) => {
+  const onRegisterPressed = async ({name, email, password}) => {
     if (loading) {
       return;
     }
     setLoading(true);
     try {
       await Auth.signUp({
-        username,
+        username: email,
         password,
         attributes: {
-          preferred_username: username,
           name,
           email,
         },
       });
-      navigation.navigate('Confirm email', {username});
+      navigation.navigate('Confirm email', {email});
     } catch (e) {
       Alert.alert('Oops', e?.message);
     } finally {
@@ -74,26 +71,6 @@ const SignUpScreen = () => {
           }}
         />
 
-        <FormInput
-          name="username"
-          control={control}
-          placeholder="Username"
-          rules={{
-            required: 'Username is required',
-            minLength: {
-              value: 3,
-              message: 'Username should be at least 3 characters long',
-            },
-            maxLength: {
-              value: 24,
-              message: 'Username should be max 24 characters long',
-            },
-            pattern: {
-              value: USERNAME_REGEX,
-              message: 'Username can only contain a-z, 0-9, _',
-            },
-          }}
-        />
         <FormInput
           name="email"
           control={control}
