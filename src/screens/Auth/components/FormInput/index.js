@@ -2,7 +2,7 @@ import React from 'react';
 import {View, Text, TextInput, StyleSheet} from 'react-native';
 import {Controller} from 'react-hook-form';
 
-function CustomInput({
+function FormInput({
   control,
   name,
   rules = {},
@@ -58,4 +58,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CustomInput;
+export default FormInput;

@@ -1,10 +1,10 @@
-import {View, Text, StyleSheet, ScrollView} from 'react-native';
-import FormInput from '../components/FormInput';
-import CustomButton from '../components/CustomButton';
+import {useState} from 'react';
+import {View, Text, StyleSheet, ScrollView, Alert} from 'react-native';
 import {useNavigation} from '@react-navigation/core';
 import {useForm} from 'react-hook-form';
 import colors from '../../../theme/colors';
-import {SocialSignInButtons} from '../components';
+import {CustomButton, FormInput, SocialSignInButtons} from '../components';
+import {Auth} from 'aws-amplify';
 
 const EMAIL_REGEX =
   /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
@@ -15,9 +15,29 @@ const SignUpScreen = () => {
   const {control, handleSubmit, watch} = useForm();
   const pwd = watch('password');
   const navigation = useNavigation();
+  const [loading, setLoading] = useState(false);
 
-  const onRegisterPressed = ({name, email, username, password}) => {
-    navigation.navigate('Confirm email', {username});
+  const onRegisterPressed = async ({name, email, username, password}) => {
+    if (loading) {
+      return;
+    }
+    setLoading(true);
+    try {
+      await Auth.signUp({
+        username,
+        password,
+        attributes: {
+          preferred_username: username,
+          name,
+          email,
+        },
+      });
+      navigation.navigate('Confirm email', {username});
+    } catch (e) {
+      Alert.alert('Oops', e?.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const onSignInPress = () => {
@@ -109,6 +129,7 @@ const SignUpScreen = () => {
         <CustomButton
           text="Register"
           onPress={handleSubmit(onRegisterPressed)}
+          loading={loading}
         />
 
         <Text style={styles.text}>

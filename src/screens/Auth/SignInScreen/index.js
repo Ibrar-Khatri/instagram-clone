@@ -1,27 +1,44 @@
+import {useState} from 'react';
 import {
   View,
   Image,
   StyleSheet,
   useWindowDimensions,
   ScrollView,
+  Alert,
 } from 'react-native';
 import Logo from '../../../assets/images/logo.png';
-import FormInput from '../components/FormInput';
-import CustomButton from '../components/CustomButton';
 import {useNavigation} from '@react-navigation/native';
 import {useForm} from 'react-hook-form';
-import {SocialSignInButtons} from '../components';
+import {CustomButton, FormInput, SocialSignInButtons} from '../components';
+import {Auth} from 'aws-amplify';
+import {useAuthContext} from '../../../contexts/AuthContext';
 
 const SignInScreen = () => {
   const {height} = useWindowDimensions();
   const navigation = useNavigation();
+  const {control, handleSubmit, reset} = useForm();
+  const [loading, setLoading] = useState(false);
+  const {setUser} = useAuthContext();
 
-  const {control, handleSubmit} = useForm();
-
-  const onSignInPressed = data => {
-    console.log(data);
-    // validate user
-    // navigation.navigate('Home');
+  const onSignInPressed = async ({username, password}) => {
+    if (loading) {
+      return;
+    }
+    setLoading(true);
+    try {
+      const cognitoUser = await Auth.signIn(username, password);
+      setUser(cognitoUser);
+    } catch (e) {
+      if (e?.name === 'UserNotConfirmedException') {
+        navigation.navigate('Confirm email', {username});
+      } else {
+        Alert.alert('Ooops', e?.message);
+      }
+    } finally {
+      setLoading(false);
+      reset();
+    }
   };
 
   const onForgotPasswordPressed = () => {
@@ -62,7 +79,11 @@ const SignInScreen = () => {
           }}
         />
 
-        <CustomButton text="Sign In" onPress={handleSubmit(onSignInPressed)} />
+        <CustomButton
+          text="Sign In"
+          onPress={handleSubmit(onSignInPressed)}
+          loading={loading}
+        />
 
         <CustomButton
           text="Forgot password?"

@@ -2,7 +2,14 @@ import React from 'react';
 import {Text, StyleSheet, Pressable} from 'react-native';
 import colors from '../../../../theme/colors';
 
-const CustomButton = ({onPress, text, type = 'PRIMARY', bgColor, fgColor}) => {
+const CustomButton = ({
+  onPress,
+  text,
+  type = 'PRIMARY',
+  bgColor,
+  fgColor,
+  loading,
+}) => {
   return (
     <Pressable
       onPress={onPress}
@@ -10,14 +17,15 @@ const CustomButton = ({onPress, text, type = 'PRIMARY', bgColor, fgColor}) => {
         styles.container,
         styles[`container_${type}`],
         bgColor ? {backgroundColor: bgColor} : {},
-      ]}>
+      ]}
+      disabled={loading}>
       <Text
         style={[
           styles.text,
           styles[`text_${type}`],
           fgColor ? {color: fgColor} : {},
         ]}>
-        {text}
+        {loading ? 'Loading...' : text}
       </Text>
     </Pressable>
   );
