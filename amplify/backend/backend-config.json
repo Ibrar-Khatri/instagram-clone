@@ -3,7 +3,17 @@
     "Instagram": {
       "service": "Cognito",
       "providerPlugin": "awscloudformation",
-      "dependsOn": [],
+      "dependsOn": [
+        {
+          "category": "function",
+          "resourceName": "InstagramPostConfirmation",
+          "triggerProvider": "Cognito",
+          "attributes": [
+            "Arn",
+            "Name"
+          ]
+        }
+      ],
       "customAuth": false,
       "frontendAuthConfig": {
         "socialProviders": [
@@ -31,6 +41,13 @@
           "EMAIL"
         ]
       }
+    }
+  },
+  "function": {
+    "InstagramPostConfirmation": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
     }
   }
 }
