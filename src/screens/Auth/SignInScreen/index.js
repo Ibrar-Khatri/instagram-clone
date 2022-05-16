@@ -12,7 +12,6 @@ import {useNavigation} from '@react-navigation/native';
 import {useForm} from 'react-hook-form';
 import {CustomButton, FormInput, SocialSignInButtons} from '../components';
 import {Auth} from 'aws-amplify';
-import {useAuthContext} from '../../../contexts/AuthContext';
 
 const EMAIL_REGEX =
   /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
@@ -21,7 +20,6 @@ const SignInScreen = () => {
   const navigation = useNavigation();
   const {control, handleSubmit, reset} = useForm();
   const [loading, setLoading] = useState(false);
-  const {setUser} = useAuthContext();
 
   const onSignInPressed = async ({email, password}) => {
     if (loading) {
@@ -29,8 +27,7 @@ const SignInScreen = () => {
     }
     setLoading(true);
     try {
-      const cognitoUser = await Auth.signIn(email, password);
-      setUser(cognitoUser);
+      await Auth.signIn(email, password);
     } catch (e) {
       if (e?.name === 'UserNotConfirmedException') {
         navigation.navigate('Confirm email', {email});
@@ -96,7 +93,7 @@ const SignInScreen = () => {
           type="TERTIARY"
         />
 
-        <SocialSignInButtons />
+        {/* <SocialSignInButtons /> */}
 
         <CustomButton
           text="Don't have an account? Create one"

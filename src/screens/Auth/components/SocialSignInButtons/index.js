@@ -1,9 +1,17 @@
-import React from 'react';
+import {Alert} from 'react-native';
+import {CognitoHostedUIIdentityProvider} from '@aws-amplify/auth';
+import {Auth} from 'aws-amplify';
 import {CustomButton} from '../';
 
 const SocialSignInButtons = () => {
-  const onSignInFacebook = () => {
-    console.warn('onSignInFacebook');
+  const onSignInFacebook = async () => {
+    try {
+      await Auth.federatedSignIn({
+        provider: CognitoHostedUIIdentityProvider.Facebook,
+      });
+    } catch (e) {
+      Alert.alert('Oops', e?.message);
+    }
   };
 
   const onSignInGoogle = () => {

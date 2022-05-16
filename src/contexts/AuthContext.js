@@ -3,25 +3,24 @@ import {createContext, useState, useContext, useEffect} from 'react';
 
 export const AuthConext = createContext({
   user: {},
-  setUser: () => {},
 });
 
 const AuthContextProvider = ({children}) => {
   const [user, setUser] = useState('undefined');
-  console.log('🚀 ~ user', user);
 
+  const checkUser = async () => {
+    try {
+      const authUser = await Auth.currentAuthenticatedUser({
+        bypassCache: true,
+      });
+
+      setUser(authUser);
+    } catch (e) {
+      setUser(null);
+    }
+  };
   useEffect(() => {
-    (async function () {
-      try {
-        const authUser = await Auth.currentAuthenticatedUser({
-          bypassCache: true,
-        });
-
-        setUser(authUser);
-      } catch (e) {
-        setUser(null);
-      }
-    })();
+    checkUser();
   }, []);
 
   useEffect(() => {
@@ -30,16 +29,15 @@ const AuthContextProvider = ({children}) => {
       if (event === 'signOut') {
         setUser(null);
       }
+      if (event === 'signIn') {
+        checkUser();
+      }
     };
     Hub.listen('auth', listener);
     return () => Hub.remove('auth', listener);
   }, []);
 
-  return (
-    <AuthConext.Provider value={{user, setUser}}>
-      {children}
-    </AuthConext.Provider>
-  );
+  return <AuthConext.Provider value={{user}}>{children}</AuthConext.Provider>;
 };
 
 export default AuthContextProvider;
