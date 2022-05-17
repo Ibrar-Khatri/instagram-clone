@@ -13,5 +13,13 @@
   "triggerEventPath": "PostConfirmation.event.json",
   "roleName": "InstagramPostConfirmation",
   "skipEdit": true,
-  "enableCors": false
+  "enableCors": false,
+  "permissions": {
+    "api": {
+      "Instagram": [
+        "Query",
+        "Mutation"
+      ]
+    }
+  }
 }
