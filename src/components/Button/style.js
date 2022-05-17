@@ -8,7 +8,6 @@ export default StyleSheet.create({
     padding: 5,
     borderRadius: 5,
     alignItems: 'center',
-    flex: 1,
     margin: 5,
   },
   text: {

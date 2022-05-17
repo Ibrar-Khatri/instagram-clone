@@ -6,6 +6,7 @@ import VideoPlayer from './VideoPlayer';
 import Button from './Button';
 import FeedGridView from './FeedGridView';
 import UserListItem from './UserListItem';
+import ApiErrorMessage from './ApiErrorMessage';
 export {
   FeedPost,
   Comment,
@@ -15,4 +16,5 @@ export {
   Button,
   FeedGridView,
   UserListItem,
+  ApiErrorMessage,
 };

@@ -3,6 +3,8 @@ import Amplify from 'aws-amplify';
 
 import config from './src/aws-exports';
 import AuthContextProvider from './src/contexts/AuthContext';
+import {SafeAreaProvider} from 'react-native-safe-area-context';
+import Client from './src/apollo/Client';
 
 // const updatedConfig = {
 //   ...config,
@@ -17,9 +19,13 @@ Amplify.configure(config);
 
 const App = () => {
   return (
-    <AuthContextProvider>
-      <Navigation />
-    </AuthContextProvider>
+    <SafeAreaProvider>
+      <AuthContextProvider>
+        <Client>
+          <Navigation />
+        </Client>
+      </AuthContextProvider>
+    </SafeAreaProvider>
   );
 };
 
