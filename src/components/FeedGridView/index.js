@@ -2,7 +2,7 @@ import {FlatList, Text, Image} from 'react-native';
 import React from 'react';
 import FeedGridItem from './FeedGridItem';
 
-const FeedGridView = ({data, ListHeaderComponent}) => {
+const FeedGridView = ({data, ListHeaderComponent, refetch, loading}) => {
   return (
     <FlatList
       data={data}
@@ -12,6 +12,8 @@ const FeedGridView = ({data, ListHeaderComponent}) => {
       ListHeaderComponent={ListHeaderComponent}
       keyExtractor={(_, i) => i}
       style={{marginHorizontal: -1}}
+      onRefresh={refetch}
+      refreshing={loading}
     />
   );
 };

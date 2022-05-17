@@ -15,7 +15,7 @@ const FeedPost = ({post, isVisible}) => {
   const navigation = useNavigation();
 
   const navigateToUser = () => {
-    navigation.navigate('UserProfile', {userId: post.user.id});
+    navigation.navigate('UserProfile', {userId: post.User.id});
   };
   const navigateToComments = () => {
     navigation.navigate('Comments', {postId: post.id});
@@ -50,13 +50,17 @@ const FeedPost = ({post, isVisible}) => {
       <View style={styles.post}>
         <View style={styles.header}>
           <Image
-            source={{
-              uri: post?.user?.image,
-            }}
+            source={
+              post.User.image
+                ? {
+                    uri: post?.user?.image,
+                  }
+                : require('../../assets/images/noUserImage.png')
+            }
             style={styles.avatarStyle}
           />
           <Text style={styles.userName} onPress={navigateToUser}>
-            {post?.user?.username}
+            {post?.User?.name}
           </Text>
           <Entypo
             name="dots-three-horizontal"
@@ -100,7 +104,7 @@ const FeedPost = ({post, isVisible}) => {
             <Text style={styles.bold}>{post.nofLikes} others</Text>
           </Text>
           <Text style={styles.text} numberOfLines={isDescExpended ? 0 : 3}>
-            <Text style={styles.bold}>{post.userName}</Text>
+            <Text style={styles.bold}>{post.User.username}</Text>
             {post.description}
           </Text>
           <Text onPress={toggleDescExpanded}>
@@ -108,9 +112,9 @@ const FeedPost = ({post, isVisible}) => {
           </Text>
 
           <Text onPress={navigateToComments}>
-            View all {post.nofComments} comments
+            View all {post?.nofComments} comments
           </Text>
-          {post.comments.map((com, i) => (
+          {post?.comments?.map((com, i) => (
             <Comment key={i} comment={com} />
           ))}
           <Text>{post?.createdAt}</Text>

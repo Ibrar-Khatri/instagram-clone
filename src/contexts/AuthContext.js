@@ -3,6 +3,7 @@ import {createContext, useState, useContext, useEffect} from 'react';
 
 export const AuthConext = createContext({
   user: {},
+  userId: '',
 });
 
 const AuthContextProvider = ({children}) => {
@@ -37,7 +38,11 @@ const AuthContextProvider = ({children}) => {
     return () => Hub.remove('auth', listener);
   }, []);
 
-  return <AuthConext.Provider value={{user}}>{children}</AuthConext.Provider>;
+  return (
+    <AuthConext.Provider value={{user, userId: user?.attributes?.sub}}>
+      {children}
+    </AuthConext.Provider>
+  );
 };
 
 export default AuthContextProvider;

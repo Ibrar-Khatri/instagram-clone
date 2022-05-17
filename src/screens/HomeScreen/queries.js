@@ -10,7 +10,6 @@ export const listPost = gql`
       items {
         id
         description
-        nonExistingField
         image
         images
         video

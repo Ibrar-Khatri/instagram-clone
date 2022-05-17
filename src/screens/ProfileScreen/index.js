@@ -1,12 +1,43 @@
+import {ActivityIndicator} from 'react-native';
+import {useQuery} from '@apollo/client';
 import {useRoute} from '@react-navigation/native';
-import user from '../../assets/data/user.json';
-import {FeedGridView} from '../../components';
+import {ApiErrorMessage, FeedGridView} from '../../components';
 import ProfileHeader from './ProfileHeader';
-
+import {GetUser} from './queries';
+import {useAuthContext} from '../../contexts/AuthContext';
 const ProfileScreen = () => {
   const {params} = useRoute();
-  console.log('🚀 ~ params', params);
-  return <FeedGridView data={user.posts} ListHeaderComponent={ProfileHeader} />;
+  const {userId: authUserId} = useAuthContext();
+
+  const userId = params?.userId || authUserId;
+  const {data, loading, error, refetch} = useQuery(GetUser, {
+    variables: {
+      id: userId,
+    },
+  });
+  if (loading) {
+    return <ActivityIndicator />;
+  }
+  const user = data?.getUser;
+  console.log('🚀 ~ user', user);
+  if (error || !user) {
+    return (
+      <ApiErrorMessage
+        title="Error fetching the user"
+        message={error?.message || 'User not found'}
+        onRetry={() => refetch()}
+      />
+    );
+  }
+
+  return (
+    <FeedGridView
+      data={user.Posts.items || []}
+      ListHeaderComponent={() => <ProfileHeader user={user} />}
+      refetch={refetch}
+      loading={loading}
+    />
+  );
 };
 
 export default ProfileScreen;

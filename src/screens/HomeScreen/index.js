@@ -1,7 +1,6 @@
 import {useQuery} from '@apollo/client';
 import {useState, useRef} from 'react';
 import {FlatList, ActivityIndicator} from 'react-native';
-import posts from '../../assets/data/posts.json';
 import {ApiErrorMessage, FeedPost} from '../../components';
 import {listPost} from './queries';
 
@@ -25,7 +24,8 @@ const HomeScreen = () => {
       <ApiErrorMessage title="Error fetching posts" message={error.message} />
     );
   }
-  // const posts = data?.listPost?.items || [];
+  const posts = data?.listPosts?.items || [];
+
   return (
     <FlatList
       data={posts}

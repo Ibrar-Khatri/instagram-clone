@@ -11,9 +11,17 @@ export default StyleSheet.create({
     width: '30%',
     aspectRatio: 1,
     borderRadius: 100,
+    borderColor: colors.border,
+    borderWidth: 1,
   },
   textButton: {
     color: colors.primary,
+    fontSize: size.md,
+    fontWeight: weight.semi,
+    margin: 10,
+  },
+  textButtonDanger: {
+    color: colors.error,
     fontSize: size.md,
     fontWeight: weight.semi,
     margin: 10,
@@ -31,6 +39,7 @@ export default StyleSheet.create({
   input: {
     borderBottomWidth: 1,
     color: colors.black,
+    minHeight: 50,
   },
   errorText: {
     color: colors.error,

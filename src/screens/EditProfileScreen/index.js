@@ -1,60 +1,62 @@
-import {useState} from 'react';
-import {Controller, useForm} from 'react-hook-form';
-import {View, Image, Text, TextInput, ScrollView} from 'react-native';
+import {useLazyQuery, useMutation, useQuery} from '@apollo/client';
+import {useState, useEffect} from 'react';
+import {useForm} from 'react-hook-form';
+import {Image, Text, ScrollView, ActivityIndicator, Alert} from 'react-native';
 import {launchImageLibrary} from 'react-native-image-picker';
-import user from '../../assets/data/user.json';
-import colors from '../../theme/colors';
+import {useAuthContext} from '../../contexts/AuthContext';
+import {deleteUser, GetUser, updateUser, usersByUsername} from './queries';
+import {ApiErrorMessage} from '../../components';
+import {useNavigation} from '@react-navigation/native';
+import {Auth} from 'aws-amplify';
+import CustomInput from './CustomInput';
 import styles from './style';
 
 const URL_REGEX =
   /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/;
 
-const CustomInput = ({label, multiline, control, name, rules}) => (
-  <Controller
-    control={control}
-    name={name}
-    rules={rules}
-    render={({field: {onChange, value, onBlur}, fieldState: {error}}) => (
-      <View style={styles.inputContainer}>
-        <Text style={styles.label}>{label}</Text>
-        <View style={{flex: 1}}>
-          <TextInput
-            value={value}
-            onChangeText={onChange}
-            onBlur={onBlur}
-            placeholder={label}
-            multiline={multiline}
-            style={[
-              styles.input,
-              {borderColor: error ? colors.error : colors.border},
-            ]}
-          />
-          {error && (
-            <Text style={styles.errorText}>{error?.message || 'required'}</Text>
-          )}
-        </View>
-      </View>
-    )}
-  />
-);
-
 const EditProfileScreen = () => {
   const [selectedPhoto, setSelectedPhoto] = useState(null);
-  const {
-    control,
-    handleSubmit,
-    formState: {errors},
-  } = useForm({
-    defaultValues: {
-      name: user.name,
-      username: user.username,
-      website: user.website,
-      bio: user.bio,
+  const {userId, user: authUser} = useAuthContext();
+  const {data, loading, error} = useQuery(GetUser, {
+    variables: {
+      id: userId,
     },
   });
+  const [
+    doUpdateUser,
+    {data: updateData, loading: updateLoading, error: updateError},
+  ] = useMutation(updateUser);
+  const [
+    doDeleteUser,
+    {data: deleteData, loading: deleteLoading, error: deleteError},
+  ] = useMutation(deleteUser);
+  const [getUsersByUsername] = useLazyQuery(usersByUsername);
 
-  const onSubmit = data => {
-    console.log('🚀 ~ data', data);
+  const {control, handleSubmit, setValue} = useForm();
+  const navigation = useNavigation();
+  const user = data?.getUser;
+
+  useEffect(() => {
+    if (user) {
+      setValue('name', user?.name);
+      setValue('username', user?.username);
+      setValue('bio', user?.bio);
+      setValue('website', user?.website);
+    }
+  }, []);
+
+  const onSubmit = async val => {
+    await doUpdateUser({
+      variables: {
+        input: {
+          id: userId,
+          ...val,
+          _version: user._version,
+        },
+      },
+    });
+
+    navigation.goBack();
   };
   const changePhoto = () => {
     launchImageLibrary(
@@ -65,6 +67,71 @@ const EditProfileScreen = () => {
       },
     );
   };
+
+  const confirmDelete = () => {
+    Alert.alert('Are you sure?', 'Deleting your user profile is permanent', [
+      {
+        text: 'Cancel',
+        style: 'cancel',
+      },
+      {
+        text: 'Yes, delete',
+        style: 'destructive',
+        onPress: startDeleting,
+      },
+    ]);
+  };
+  const startDeleting = async () => {
+    // console.log('Deleting');
+    if (!user) {
+      return;
+    }
+    await doDeleteUser({
+      variables: {
+        input: {
+          id: userId,
+          _version: user._version,
+        },
+      },
+    });
+    authUser.deleteUser(err => {
+      if (err) {
+        console.log(err);
+      }
+      Auth.signOut();
+    });
+  };
+
+  const validateUsername = async username => {
+    try {
+      const response = await getUsersByUsername({
+        variables: {username},
+      });
+      if (response?.error) {
+        Alert.alert('Failed to fetch username');
+        return 'Failed to fetch username';
+      }
+      const users = response?.data?.usersByUsername?.items;
+      if (users && users?.length > 0 && users?.[0]?.id !== userId) {
+        return 'Username is already taken';
+      }
+    } catch (e) {
+      Alert.alert('Failed to fetch username');
+    }
+    return true;
+  };
+
+  if (loading) {
+    return <ActivityIndicator />;
+  }
+  if (error || updateError || deleteError) {
+    return (
+      <ApiErrorMessage
+        title="Error fetching or updating the user"
+        message={error?.message || updateError?.message || deleteError?.message}
+      />
+    );
+  }
   return (
     <ScrollView contentContainerStyle={styles.page}>
       <Image
@@ -91,6 +158,7 @@ const EditProfileScreen = () => {
             value: 3,
             message: 'Username should be more than 3 character',
           },
+          validate: validateUsername,
         }}
         label="Username"
       />
@@ -120,7 +188,10 @@ const EditProfileScreen = () => {
         multiline
       />
       <Text style={styles.textButton} onPress={handleSubmit(onSubmit)}>
-        Submit
+        {updateLoading ? 'Submiting...' : 'Submit'}
+      </Text>
+      <Text style={styles.textButtonDanger} onPress={confirmDelete}>
+        {deleteLoading ? 'Deleting...' : 'Delete'}
       </Text>
     </ScrollView>
   );
