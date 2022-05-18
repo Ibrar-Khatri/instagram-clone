@@ -6,7 +6,7 @@ import {listPost} from './queries';
 
 const HomeScreen = () => {
   const [activePostId, setActivePostId] = useState(null);
-  const {data, loading, error} = useQuery(listPost);
+  const {data, loading, error, refetch} = useQuery(listPost);
 
   const viewabilityConfig = useRef({
     itemVisiblePercentThreshold: 50,
@@ -35,6 +35,8 @@ const HomeScreen = () => {
       showsVerticalScrollIndicator={false}
       onViewableItemsChanged={onViewableItemsChanged.current}
       viewabilityConfig={viewabilityConfig.current}
+      onRefresh={() => refetch()}
+      refreshing={loading}
     />
   );
 };

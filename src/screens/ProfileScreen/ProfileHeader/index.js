@@ -8,7 +8,9 @@ import {useAuthContext} from '../../../contexts/AuthContext';
 const ProfileHeader = ({user}) => {
   const navigation = useNavigation();
   const {userId} = useAuthContext();
-
+  navigation.setOptions({
+    title: user?.username || 'Profile',
+  });
   return (
     <View style={styles.root}>
       <View style={styles.headerRow}>

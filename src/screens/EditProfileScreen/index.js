@@ -17,11 +17,13 @@ const URL_REGEX =
 const EditProfileScreen = () => {
   const [selectedPhoto, setSelectedPhoto] = useState(null);
   const {userId, user: authUser} = useAuthContext();
+
   const {data, loading, error} = useQuery(GetUser, {
     variables: {
       id: userId,
     },
   });
+
   const [
     doUpdateUser,
     {data: updateData, loading: updateLoading, error: updateError},
@@ -43,7 +45,7 @@ const EditProfileScreen = () => {
       setValue('bio', user?.bio);
       setValue('website', user?.website);
     }
-  }, []);
+  }, [user]);
 
   const onSubmit = async val => {
     await doUpdateUser({
@@ -55,8 +57,9 @@ const EditProfileScreen = () => {
         },
       },
     });
-
-    navigation.goBack();
+    if (navigation.canGoBack()) {
+      navigation.goBack();
+    }
   };
   const changePhoto = () => {
     launchImageLibrary(
@@ -82,7 +85,6 @@ const EditProfileScreen = () => {
     ]);
   };
   const startDeleting = async () => {
-    // console.log('Deleting');
     if (!user) {
       return;
     }

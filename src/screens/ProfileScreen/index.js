@@ -19,7 +19,7 @@ const ProfileScreen = () => {
     return <ActivityIndicator />;
   }
   const user = data?.getUser;
-  console.log('🚀 ~ user', user);
+
   if (error || !user) {
     return (
       <ApiErrorMessage
