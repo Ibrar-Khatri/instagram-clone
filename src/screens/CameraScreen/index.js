@@ -1,3 +1,4 @@
+import {useNavigation} from '@react-navigation/native';
 import React, {useState, useRef} from 'react';
 import {View, Pressable} from 'react-native';
 import {RNCamera} from 'react-native-camera';
@@ -12,11 +13,12 @@ const flashModeToIcon = {
   [RNCamera.Constants.FlashMode.auto]: 'flash-auto',
 };
 
-const PostUploadScreen = () => {
+const CameraScreen = () => {
   let [flash, setFlash] = useState(0);
   let [type, setType] = useState(RNCamera.Constants.Type.back);
   const [isCameraReady, setIsCameraReady] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
+  const navigation = useNavigation();
   let cameraRef = useRef(null);
 
   const toggleType = () => {
@@ -54,6 +56,15 @@ const PostUploadScreen = () => {
       cameraRef.current.stopRecording();
       setIsRecording(false);
     }
+  };
+
+  const navigateToCreateScreen = () => {
+    navigation.navigate('Create', {
+      images: [
+        'https://notjustdev-dummy.s3.us-east-2.amazonaws.com/images/1.jpg',
+        'https://notjustdev-dummy.s3.us-east-2.amazonaws.com/images/2.jpg',
+      ],
+    });
   };
 
   const takePicture = async () => {
@@ -105,9 +116,15 @@ const PostUploadScreen = () => {
           color={colors.white}
           onPress={toggleType}
         />
+        <MaterialIcons
+          name="arrow-forward-ios"
+          size={30}
+          color={colors.white}
+          onPress={navigateToCreateScreen}
+        />
       </View>
     </View>
   );
 };
 
-export default PostUploadScreen;
+export default CameraScreen;

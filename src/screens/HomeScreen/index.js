@@ -24,7 +24,7 @@ const HomeScreen = () => {
       <ApiErrorMessage title="Error fetching posts" message={error.message} />
     );
   }
-  const posts = data?.listPosts?.items || [];
+  const posts = (data?.listPosts?.items || []).filter(post => !post?._deleted);
 
   return (
     <FlatList

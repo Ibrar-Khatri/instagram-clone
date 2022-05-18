@@ -8,6 +8,7 @@ import Feather from 'react-native-vector-icons/Feather';
 import styles from './style';
 import {Comment, DoublePressable, Carousel, VideoPlayer} from '../index';
 import {useNavigation} from '@react-navigation/native';
+import FeedPostMenu from './FeedPostMenu';
 
 const FeedPost = ({post, isVisible}) => {
   const [isDescExpended, setIsDescExpended] = useState(false);
@@ -62,12 +63,7 @@ const FeedPost = ({post, isVisible}) => {
           <Text style={styles.userName} onPress={navigateToUser}>
             {post?.User?.name}
           </Text>
-          <Entypo
-            name="dots-three-horizontal"
-            size={16}
-            style={styles.threeDots}
-            color={colors.black}
-          />
+          <FeedPostMenu post={post} />
         </View>
         {content}
         <View style={styles.footer}>
