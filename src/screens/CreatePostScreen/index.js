@@ -27,7 +27,7 @@ const CreatePostScreen = () => {
     );
   } else if (images) {
     content = <Carousel images={images} />;
-  } else if (post.video) {
+  } else if (video) {
     content = <VideoPlayer uri={video} />;
   }
 

@@ -11,9 +11,11 @@ import {
 import colors from '../../../theme/colors';
 import {deletePost} from '../queries';
 import {useAuthContext} from '../../../contexts/AuthContext';
+import {useNavigation} from '@react-navigation/native';
 
 const FeedPostMenu = ({post}) => {
   const {userId} = useAuthContext();
+  const navigation = useNavigation();
   const [doDeletePost] = useMutation(deletePost, {
     variables: {
       input: {
@@ -40,7 +42,9 @@ const FeedPostMenu = ({post}) => {
       },
     ]);
   };
-  const onEditOptionPressed = () => {};
+  const onEditOptionPressed = () => {
+    navigation.navigate('UpdatePost', {id: post.id});
+  };
   const isMyPost = userId === post.userID;
   return (
     <Menu renderer={renderers.SlideInMenu} style={styles.threeDots}>

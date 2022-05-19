@@ -3,6 +3,7 @@ import {Image} from 'react-native';
 import HomeScreen from '../screens/HomeScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 import Logo from '../assets/images/logo.png';
+import UpdatePostScreen from '../screens/UpdatePostScreen';
 
 const Stack = createNativeStackNavigator();
 const HomeStackNavigator = () => {
@@ -20,6 +21,11 @@ const HomeStackNavigator = () => {
         name="UserProfile"
         component={ProfileScreen}
         options={{title: 'Profile'}}
+      />
+      <Stack.Screen
+        name="UpdatePost"
+        component={UpdatePostScreen}
+        options={{title: 'Update Post'}}
       />
     </Stack.Navigator>
   );
