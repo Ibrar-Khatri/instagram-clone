@@ -9,7 +9,14 @@ const UserListItem = ({user}) => {
   };
   return (
     <Pressable style={styles.root} onPress={goToUserScreen}>
-      <Image source={{uri: user.image}} style={styles.image} />
+      <Image
+        source={
+          user.image
+            ? {uri: user.image}
+            : require('../../assets/images/noUserImage.png')
+        }
+        style={styles.image}
+      />
       <View style={styles.userDet}>
         <Text style={styles.name}>{user.name}</Text>
         <Text style={styles.username}>{user.username}</Text>

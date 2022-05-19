@@ -10,12 +10,19 @@ const Comment = ({comment, includeDetails = false}) => {
   return (
     <View style={styles.comment}>
       {includeDetails && (
-        <Image source={{uri: comment.user.image}} style={styles.avatar} />
+        <Image
+          source={
+            comment?.User?.image
+              ? {uri: comment?.User?.image}
+              : require('../../assets/images/noUserImage.png')
+          }
+          style={styles.avatar}
+        />
       )}
 
       <View style={styles.middleColumn}>
         <Text style={styles.commentText}>
-          <Text style={styles.bold}>{comment.user.username} </Text>
+          <Text style={styles.bold}>{comment?.User?.username} </Text>
           {comment.comment}
         </Text>
         {includeDetails && (

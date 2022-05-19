@@ -1,9 +1,13 @@
 import {useState} from 'react';
-import {View, Text, Image, TextInput} from 'react-native';
+import {View, Text, Image, TextInput, Alert} from 'react-native';
+import useCommentsServices from '../../../services/CommentsServices';
 import styles from './style';
-const InputComment = () => {
+const InputComment = ({postId}) => {
   const [newComment, setNewComment] = useState('');
-  const onPost = () => {
+  const {onCreateComment} = useCommentsServices(postId);
+
+  const onPost = async () => {
+    onCreateComment(newComment);
     setNewComment('');
   };
   return (

@@ -27,7 +27,7 @@ export const listPost = gql`
           username
           image
         }
-        Comments {
+        Comments(limit: 2) {
           items {
             id
             comment
@@ -37,6 +37,20 @@ export const listPost = gql`
               username
             }
           }
+          nextToken
+          startedAt
+        }
+        Likes {
+          items {
+            id
+            _deleted
+            User {
+              id
+              username
+            }
+          }
+          nextToken
+          startedAt
         }
       }
       nextToken

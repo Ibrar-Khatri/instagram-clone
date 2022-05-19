@@ -4,6 +4,7 @@ import HomeScreen from '../screens/HomeScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 import Logo from '../assets/images/logo.png';
 import UpdatePostScreen from '../screens/UpdatePostScreen';
+import PostLikeScreen from '../screens/PostLikeScreen';
 
 const Stack = createNativeStackNavigator();
 const HomeStackNavigator = () => {
@@ -26,6 +27,11 @@ const HomeStackNavigator = () => {
         name="UpdatePost"
         component={UpdatePostScreen}
         options={{title: 'Update Post'}}
+      />
+      <Stack.Screen
+        name="PostLikes"
+        component={PostLikeScreen}
+        options={{title: 'Post Likes'}}
       />
     </Stack.Navigator>
   );
