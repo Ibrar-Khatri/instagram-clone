@@ -7,4 +7,7 @@ export default StyleSheet.create({
   commentsScreenView: {
     flex: 1,
   },
+  loadMoreText: {
+    padding: 10,
+  },
 });

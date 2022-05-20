@@ -6,10 +6,12 @@ import {postsByDate} from './queries';
 
 const HomeScreen = () => {
   const [activePostId, setActivePostId] = useState(null);
-  const {data, loading, error, refetch} = useQuery(postsByDate, {
+  const [isFetchingMore, setIsFetchingMore] = useState(false);
+  const {data, loading, error, refetch, fetchMore} = useQuery(postsByDate, {
     variables: {
       type: 'POST',
       sortDirection: 'DESC',
+      limit: 1,
     },
   });
 
@@ -20,6 +22,17 @@ const HomeScreen = () => {
   const onViewableItemsChanged = useRef(({viewableItems, changed}) => {
     setActivePostId(changed[0].item?.id);
   });
+
+  const nextToken = data?.postsByDate?.nextToken;
+
+  const loadMore = async () => {
+    if (!nextToken || isFetchingMore) {
+      return;
+    }
+    setIsFetchingMore(true);
+    await fetchMore({variables: {nextToken}});
+    setIsFetchingMore(false);
+  };
 
   if (loading) {
     return <ActivityIndicator />;
@@ -44,6 +57,7 @@ const HomeScreen = () => {
       viewabilityConfig={viewabilityConfig.current}
       onRefresh={() => refetch()}
       refreshing={loading}
+      onEndReached={loadMore}
     />
   );
 };
