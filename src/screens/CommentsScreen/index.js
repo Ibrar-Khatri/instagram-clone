@@ -1,15 +1,16 @@
-import {useState} from 'react';
+import {useState, useEffect} from 'react';
 import {View, FlatList, ActivityIndicator, Text} from 'react-native';
 import {ApiErrorMessage, Comment} from '../../components';
 import styles from './style';
 import InputComment from './InputComment';
 import {useRoute} from '@react-navigation/native';
-import {useQuery} from '@apollo/client';
-import {commentsByPost} from './queries';
+import {useQuery, useSubscription} from '@apollo/client';
+import {commentsByPost, onCreateCommentByPostId} from './queries';
 
 const CommentsScreen = () => {
   const route = useRoute();
   const {postId} = route.params;
+  const [newComments, setNewComments] = useState([]);
   const {data, loading, error, fetchMore} = useQuery(commentsByPost, {
     variables: {
       postID: postId,
@@ -17,11 +18,28 @@ const CommentsScreen = () => {
       limit: 10,
     },
   });
-  const comments = data?.commentsByPost?.items?.filter(
-    comment => !comment?._deleted,
-  );
+
+  const {data: newCommentsData} = useSubscription(onCreateCommentByPostId, {
+    variables: {postID: postId},
+  });
+  console.log('🚀 ~ newCommentsData', newComments);
+  useEffect(() => {
+    if (newCommentsData?.onCreateCommentByPostId) {
+      setNewComments(existing => [
+        newCommentsData?.onCreateCommentByPostId,
+        ...existing,
+      ]);
+    }
+  }, [newCommentsData]);
+
+  const comments =
+    data?.commentsByPost?.items?.filter(comment => !comment?._deleted) || [];
   const [isFetchingMore, setIsFetchingMore] = useState(false);
   const nextToken = data?.commentsByPost?.nextToken;
+
+  const isNewComment = coment => {
+    return newComments.some(c => c.id === coment.id);
+  };
 
   const loadMore = async () => {
     if (!nextToken || isFetchingMore) {
@@ -45,8 +63,12 @@ const CommentsScreen = () => {
   return (
     <View style={styles.commentsScreenView}>
       <FlatList
-        data={comments}
-        renderItem={({item}) => <Comment comment={item} includeDetails />}
+        data={[...newComments, ...comments]}
+        renderItem={({item}) =>
+          item && (
+            <Comment comment={item} includeDetails isNew={isNewComment(item)} />
+          )
+        }
         style={styles.flatListStyle}
         inverted={true}
         ListEmptyComponent={() => <Text>No comment, be the first Comment</Text>}

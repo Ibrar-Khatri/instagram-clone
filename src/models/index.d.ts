@@ -4,8 +4,8 @@ import { ModelInit, MutableModel, PersistentModelConstructor } from "@aws-amplif
 
 
 
-type LikeMetaData = {
-  readOnlyFields: 'createdAt' | 'updatedAt';
+type CommentMetaData = {
+  readOnlyFields: 'updatedAt';
 }
 
 type UserMetaData = {
@@ -16,18 +16,19 @@ type PostMetaData = {
   readOnlyFields: 'updatedAt';
 }
 
-type CommentMetaData = {
-  readOnlyFields: 'updatedAt';
+type LikeMetaData = {
+  readOnlyFields: 'createdAt' | 'updatedAt';
 }
 
-export declare class Like {
+export declare class Comment {
   readonly id: string;
+  readonly createdAt: string;
+  readonly comment: string;
   readonly User?: User | null;
   readonly Post?: Post | null;
-  readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
-  constructor(init: ModelInit<Like, LikeMetaData>);
-  static copyOf(source: Like, mutator: (draft: MutableModel<Like, LikeMetaData>) => MutableModel<Like, LikeMetaData> | void): Like;
+  constructor(init: ModelInit<Comment, CommentMetaData>);
+  static copyOf(source: Comment, mutator: (draft: MutableModel<Comment, CommentMetaData>) => MutableModel<Comment, CommentMetaData> | void): Comment;
 }
 
 export declare class User {
@@ -68,13 +69,12 @@ export declare class Post {
   static copyOf(source: Post, mutator: (draft: MutableModel<Post, PostMetaData>) => MutableModel<Post, PostMetaData> | void): Post;
 }
 
-export declare class Comment {
+export declare class Like {
   readonly id: string;
-  readonly createdAt: string;
-  readonly comment: string;
   readonly User?: User | null;
   readonly Post?: Post | null;
+  readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
-  constructor(init: ModelInit<Comment, CommentMetaData>);
-  static copyOf(source: Comment, mutator: (draft: MutableModel<Comment, CommentMetaData>) => MutableModel<Comment, CommentMetaData> | void): Comment;
+  constructor(init: ModelInit<Like, LikeMetaData>);
+  static copyOf(source: Like, mutator: (draft: MutableModel<Like, LikeMetaData>) => MutableModel<Like, LikeMetaData> | void): Like;
 }

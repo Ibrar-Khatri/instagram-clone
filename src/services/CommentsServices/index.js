@@ -44,7 +44,6 @@ const useCommentsServices = postId => {
             comment: newComment,
           },
         },
-        refetchQueries: ['CommentsByPost'],
       });
       incrementNofComments(1);
     } catch (e) {

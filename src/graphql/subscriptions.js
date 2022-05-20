@@ -1,6 +1,54 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
+export const onCreateCommentByPostId = /* GraphQL */ `
+  subscription OnCreateCommentByPostId($postID: ID!) {
+    onCreateCommentByPostId(postID: $postID) {
+      id
+      createdAt
+      comment
+      userID
+      postID
+      User {
+        id
+        name
+        email
+        username
+        bio
+        website
+        nofPosts
+        nofFollowers
+        nofFollowings
+        image
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+      }
+      Post {
+        id
+        createdAt
+        type
+        description
+        image
+        images
+        video
+        nofComments
+        nofLikes
+        userID
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+      }
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+    }
+  }
+`;
 export const onCreateLike = /* GraphQL */ `
   subscription OnCreateLike {
     onCreateLike {

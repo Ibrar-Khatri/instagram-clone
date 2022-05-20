@@ -45,6 +45,7 @@ const HomeScreen = () => {
   const posts = (data?.postsByDate?.items || []).filter(
     post => !post?._deleted,
   );
+  console.log('🚀 ~ posts', posts);
 
   return (
     <FlatList
