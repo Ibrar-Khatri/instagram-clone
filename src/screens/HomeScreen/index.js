@@ -2,11 +2,16 @@ import {useQuery} from '@apollo/client';
 import {useState, useRef} from 'react';
 import {FlatList, ActivityIndicator} from 'react-native';
 import {ApiErrorMessage, FeedPost} from '../../components';
-import {listPost} from './queries';
+import {postsByDate} from './queries';
 
 const HomeScreen = () => {
   const [activePostId, setActivePostId] = useState(null);
-  const {data, loading, error, refetch} = useQuery(listPost);
+  const {data, loading, error, refetch} = useQuery(postsByDate, {
+    variables: {
+      type: 'POST',
+      sortDirection: 'DESC',
+    },
+  });
 
   const viewabilityConfig = useRef({
     itemVisiblePercentThreshold: 50,
@@ -24,7 +29,9 @@ const HomeScreen = () => {
       <ApiErrorMessage title="Error fetching posts" message={error.message} />
     );
   }
-  const posts = (data?.listPosts?.items || []).filter(post => !post?._deleted);
+  const posts = (data?.postsByDate?.items || []).filter(
+    post => !post?._deleted,
+  );
 
   return (
     <FlatList

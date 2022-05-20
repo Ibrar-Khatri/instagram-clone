@@ -5,6 +5,10 @@ import AuthContextProvider from './src/contexts/AuthContext';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import Client from './src/apollo/Client';
 import config from './src/aws-exports';
+import * as dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';
+
+dayjs.extend(relativeTime);
 
 // const updatedConfig = {
 //   ...config,

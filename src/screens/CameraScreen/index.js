@@ -45,7 +45,6 @@ const CameraScreen = () => {
     setIsRecording(true);
     try {
       const data = await cameraRef.current.recordAsync(options);
-      console.log('🚀 ~ data', data);
     } catch (e) {
       console.log('🚀 ~ e', e);
     }
@@ -72,7 +71,6 @@ const CameraScreen = () => {
     }
     const options = {quality: 0.5, base64: false, skipProcessing: true};
     const data = await cameraRef.current.takePictureAsync(options);
-    console.log(data.uri);
   };
 
   return (

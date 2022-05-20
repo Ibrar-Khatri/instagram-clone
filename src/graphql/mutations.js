@@ -29,6 +29,8 @@ export const createLike = /* GraphQL */ `
       }
       Post {
         id
+        createdAt
+        type
         description
         image
         images
@@ -36,7 +38,6 @@ export const createLike = /* GraphQL */ `
         nofComments
         nofLikes
         userID
-        createdAt
         updatedAt
         _version
         _deleted
@@ -78,6 +79,8 @@ export const updateLike = /* GraphQL */ `
       }
       Post {
         id
+        createdAt
+        type
         description
         image
         images
@@ -85,7 +88,6 @@ export const updateLike = /* GraphQL */ `
         nofComments
         nofLikes
         userID
-        createdAt
         updatedAt
         _version
         _deleted
@@ -127,6 +129,8 @@ export const deleteLike = /* GraphQL */ `
       }
       Post {
         id
+        createdAt
+        type
         description
         image
         images
@@ -134,7 +138,6 @@ export const deleteLike = /* GraphQL */ `
         nofComments
         nofLikes
         userID
-        createdAt
         updatedAt
         _version
         _deleted
@@ -155,6 +158,7 @@ export const createComment = /* GraphQL */ `
   ) {
     createComment(input: $input, condition: $condition) {
       id
+      createdAt
       comment
       userID
       postID
@@ -177,6 +181,8 @@ export const createComment = /* GraphQL */ `
       }
       Post {
         id
+        createdAt
+        type
         description
         image
         images
@@ -184,13 +190,11 @@ export const createComment = /* GraphQL */ `
         nofComments
         nofLikes
         userID
-        createdAt
         updatedAt
         _version
         _deleted
         _lastChangedAt
       }
-      createdAt
       updatedAt
       _version
       _deleted
@@ -205,6 +209,7 @@ export const updateComment = /* GraphQL */ `
   ) {
     updateComment(input: $input, condition: $condition) {
       id
+      createdAt
       comment
       userID
       postID
@@ -227,6 +232,8 @@ export const updateComment = /* GraphQL */ `
       }
       Post {
         id
+        createdAt
+        type
         description
         image
         images
@@ -234,13 +241,11 @@ export const updateComment = /* GraphQL */ `
         nofComments
         nofLikes
         userID
-        createdAt
         updatedAt
         _version
         _deleted
         _lastChangedAt
       }
-      createdAt
       updatedAt
       _version
       _deleted
@@ -255,6 +260,7 @@ export const deleteComment = /* GraphQL */ `
   ) {
     deleteComment(input: $input, condition: $condition) {
       id
+      createdAt
       comment
       userID
       postID
@@ -277,6 +283,8 @@ export const deleteComment = /* GraphQL */ `
       }
       Post {
         id
+        createdAt
+        type
         description
         image
         images
@@ -284,13 +292,11 @@ export const deleteComment = /* GraphQL */ `
         nofComments
         nofLikes
         userID
-        createdAt
         updatedAt
         _version
         _deleted
         _lastChangedAt
       }
-      createdAt
       updatedAt
       _version
       _deleted
@@ -305,6 +311,8 @@ export const createPost = /* GraphQL */ `
   ) {
     createPost(input: $input, condition: $condition) {
       id
+      createdAt
+      type
       description
       image
       images
@@ -337,7 +345,6 @@ export const createPost = /* GraphQL */ `
         nextToken
         startedAt
       }
-      createdAt
       updatedAt
       _version
       _deleted
@@ -352,6 +359,8 @@ export const updatePost = /* GraphQL */ `
   ) {
     updatePost(input: $input, condition: $condition) {
       id
+      createdAt
+      type
       description
       image
       images
@@ -384,7 +393,6 @@ export const updatePost = /* GraphQL */ `
         nextToken
         startedAt
       }
-      createdAt
       updatedAt
       _version
       _deleted
@@ -399,6 +407,8 @@ export const deletePost = /* GraphQL */ `
   ) {
     deletePost(input: $input, condition: $condition) {
       id
+      createdAt
+      type
       description
       image
       images
@@ -431,7 +441,6 @@ export const deletePost = /* GraphQL */ `
         nextToken
         startedAt
       }
-      createdAt
       updatedAt
       _version
       _deleted

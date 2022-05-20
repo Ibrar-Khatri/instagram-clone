@@ -13,7 +13,7 @@ const useCommentsServices = postId => {
     },
   });
   const post = postData?.getPost;
-  console.log('🚀 ~ post', postData);
+
   const incrementNofComments = amount => {
     if (!post) {
       Alert.alert('Failed to load post. Try again later');

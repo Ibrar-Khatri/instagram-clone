@@ -12,6 +12,7 @@ const CommentsScreen = () => {
   const {data, loading, error} = useQuery(commentsByPost, {
     variables: {
       postID: postId,
+      sortDirection: 'DESC',
     },
   });
   const comments = data?.commentsByPost?.items?.filter(
@@ -35,6 +36,7 @@ const CommentsScreen = () => {
         data={comments}
         renderItem={({item}) => <Comment comment={item} includeDetails />}
         style={styles.flatListStyle}
+        inverted
         ListEmptyComponent={() => (
           <Text>No comment, be the first Comment </Text>
         )}

@@ -27,7 +27,6 @@ const FeedPostMenu = ({post}) => {
 
   const startDeleting = async () => {
     const response = await doDeletePost();
-    console.log('🚀 ~ response', response);
   };
   const onDeleteOptionPressed = () => {
     Alert.alert('Are you sure?', 'Deleting a post is permanent', [
@@ -46,6 +45,7 @@ const FeedPostMenu = ({post}) => {
     navigation.navigate('UpdatePost', {id: post.id});
   };
   const isMyPost = userId === post.userID;
+
   return (
     <Menu renderer={renderers.SlideInMenu} style={styles.threeDots}>
       <MenuTrigger>
@@ -55,7 +55,7 @@ const FeedPostMenu = ({post}) => {
         <MenuOption onSelect={() => Alert.alert('Repoerting')}>
           <Text style={styles.optionText}>Report</Text>
         </MenuOption>
-        {!isMyPost && (
+        {isMyPost && (
           <>
             <MenuOption onSelect={onDeleteOptionPressed}>
               <Text style={[styles.optionText, {color: colors.accent}]}>

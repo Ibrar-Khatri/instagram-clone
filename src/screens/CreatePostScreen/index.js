@@ -36,6 +36,7 @@ const CreatePostScreen = () => {
       const response = await doCratePost({
         variables: {
           input: {
+            type: 'POST',
             description,
             image: image,
             images: images,
@@ -46,7 +47,7 @@ const CreatePostScreen = () => {
           },
         },
       });
-      console.log(response?.data?.createPost);
+
       navigation.popToTop();
       navigation.navigate('HomeStack');
     } catch (e) {

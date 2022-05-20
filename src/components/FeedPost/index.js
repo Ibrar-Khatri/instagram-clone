@@ -9,9 +9,9 @@ import {Comment, DoublePressable, Carousel, VideoPlayer} from '../index';
 import {useNavigation} from '@react-navigation/native';
 import FeedPostMenu from './FeedPostMenu';
 import useLikeService from '../../services/LikeService';
+import dayjs from 'dayjs';
 
 const FeedPost = ({post, isVisible}) => {
-  console.log('🚀 ~ post', post);
   const [isDescExpended, setIsDescExpended] = useState(false);
   const navigation = useNavigation();
 
@@ -50,8 +50,6 @@ const FeedPost = ({post, isVisible}) => {
   } else if (post.video) {
     content = <VideoPlayer uri={post.video} paused={!isVisible} />;
   }
-
-  console.log(post?.Comments?.items, 'post?.Comments?.items');
 
   return (
     <ScrollView>
@@ -130,7 +128,7 @@ const FeedPost = ({post, isVisible}) => {
           {(post?.Comments?.items || []).map((com, i) => (
             <Comment key={i} comment={com} />
           ))}
-          <Text>{post?.createdAt}</Text>
+          <Text>{dayjs(post?.createdAt).fromNow()}</Text>
         </View>
       </View>
     </ScrollView>
