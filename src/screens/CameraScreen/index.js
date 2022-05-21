@@ -2,6 +2,8 @@ import {useNavigation} from '@react-navigation/native';
 import React, {useState, useRef} from 'react';
 import {View, Pressable} from 'react-native';
 import {RNCamera} from 'react-native-camera';
+import {launchImageLibrary} from 'react-native-image-picker';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import colors from '../../theme/colors';
 import styles from './style';
@@ -20,6 +22,8 @@ const CameraScreen = () => {
   const [isRecording, setIsRecording] = useState(false);
   const navigation = useNavigation();
   let cameraRef = useRef(null);
+
+  const inset = useSafeAreaInsets();
 
   const toggleType = () => {
     setType(v =>
@@ -45,6 +49,9 @@ const CameraScreen = () => {
     setIsRecording(true);
     try {
       const data = await cameraRef.current.recordAsync(options);
+      navigation.navigate('Create', {
+        video: data.uri,
+      });
     } catch (e) {
       console.log('🚀 ~ e', e);
     }
@@ -57,13 +64,24 @@ const CameraScreen = () => {
     }
   };
 
-  const navigateToCreateScreen = () => {
-    navigation.navigate('Create', {
-      images: [
-        'https://notjustdev-dummy.s3.us-east-2.amazonaws.com/images/1.jpg',
-        'https://notjustdev-dummy.s3.us-east-2.amazonaws.com/images/2.jpg',
-      ],
-    });
+  const openImageGallery = () => {
+    launchImageLibrary(
+      {mediaType: 'mixed', selectionLimit: 3},
+      ({didCancel, errorCode, errorMessage, assets}) => {
+        if (!didCancel && !errorCode && assets.length > 0) {
+          const params = {};
+          if (assets.length === 1) {
+            const field = assets[0].type?.startsWith('video')
+              ? 'video'
+              : 'image';
+            params[field] = assets[0].uri;
+          } else if (assets.length > 1) {
+            params.images = assets?.map(asset => asset.uri);
+          }
+          navigation.navigate('Create', params);
+        }
+      },
+    );
   };
 
   const takePicture = async () => {
@@ -71,6 +89,9 @@ const CameraScreen = () => {
     }
     const options = {quality: 0.5, base64: false, skipProcessing: true};
     const data = await cameraRef.current.takePictureAsync(options);
+    navigation.navigate('Create', {
+      image: data.uri,
+    });
   };
 
   return (
@@ -83,7 +104,7 @@ const CameraScreen = () => {
         aspectRatio={4 / 3}
         onCameraReady={() => setIsCameraReady(true)}
       />
-      <View style={[styles.buttonsContainer, {top: 25}]}>
+      <View style={[styles.buttonsContainer, {top: inset.top + 25}]}>
         <MaterialIcons name="close" size={30} color={colors.white} />
         <MaterialIcons
           name={flashModeToIcon[flash]}
@@ -94,7 +115,12 @@ const CameraScreen = () => {
         <MaterialIcons name="settings" size={30} color={colors.white} />
       </View>
       <View style={[styles.buttonsContainer, {bottom: 25}]}>
-        <MaterialIcons name="photo-library" size={30} color={colors.white} />
+        <MaterialIcons
+          name="photo-library"
+          size={30}
+          color={colors.white}
+          onPress={openImageGallery}
+        />
         {isCameraReady && (
           <Pressable
             onPress={takePicture}
@@ -113,12 +139,6 @@ const CameraScreen = () => {
           size={30}
           color={colors.white}
           onPress={toggleType}
-        />
-        <MaterialIcons
-          name="arrow-forward-ios"
-          size={30}
-          color={colors.white}
-          onPress={navigateToCreateScreen}
         />
       </View>
     </View>

@@ -7,8 +7,10 @@ const InputComment = ({postId}) => {
   const {onCreateComment} = useCommentsServices(postId);
 
   const onPost = async () => {
-    onCreateComment(newComment);
-    setNewComment('');
+    if (newComment) {
+      onCreateComment(newComment);
+      setNewComment('');
+    }
   };
   return (
     <View style={styles.root}>

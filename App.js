@@ -1,3 +1,4 @@
+import 'react-native-get-random-values';
 import Amplify from 'aws-amplify';
 import Navigation from './src/navigation';
 import {MenuProvider} from 'react-native-popup-menu';

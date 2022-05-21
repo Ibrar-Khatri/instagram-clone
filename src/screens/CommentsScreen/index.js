@@ -32,6 +32,7 @@ const CommentsScreen = () => {
     }
   }, [newCommentsData]);
 
+  console.log('🚀 ~ comments', newComments);
   const comments =
     data?.commentsByPost?.items?.filter(comment => !comment?._deleted) || [];
   const [isFetchingMore, setIsFetchingMore] = useState(false);

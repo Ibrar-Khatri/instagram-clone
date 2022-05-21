@@ -11,7 +11,7 @@ const HomeScreen = () => {
     variables: {
       type: 'POST',
       sortDirection: 'DESC',
-      limit: 1,
+      limit: 10,
     },
   });
 
@@ -45,7 +45,6 @@ const HomeScreen = () => {
   const posts = (data?.postsByDate?.items || []).filter(
     post => !post?._deleted,
   );
-  console.log('🚀 ~ posts', posts);
 
   return (
     <FlatList

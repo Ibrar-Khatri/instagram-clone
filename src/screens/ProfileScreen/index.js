@@ -5,6 +5,7 @@ import {ApiErrorMessage, FeedGridView} from '../../components';
 import ProfileHeader from './ProfileHeader';
 import {GetUser} from './queries';
 import {useAuthContext} from '../../contexts/AuthContext';
+
 const ProfileScreen = () => {
   const {params} = useRoute();
   const {userId: authUserId} = useAuthContext();
@@ -30,9 +31,10 @@ const ProfileScreen = () => {
     );
   }
 
+  console.log('🚀 ~ user.Posts.items', user.Posts.items);
   return (
     <FeedGridView
-      data={user.Posts.items || []}
+      data={user?.Posts?.items || []}
       ListHeaderComponent={() => <ProfileHeader user={user} />}
       refetch={refetch}
       loading={loading}

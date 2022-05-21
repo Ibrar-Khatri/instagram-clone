@@ -6,8 +6,8 @@ export default StyleSheet.create({
     alignItems: 'center',
   },
   image: {
-    width: 200,
-    height: 200,
+    width: '100%',
+    aspectRatio: 1,
   },
   input: {
     marginVertical: 10,
@@ -21,5 +21,22 @@ export default StyleSheet.create({
     width: '100%',
     aspectRatio: 1,
     alignItems: 'center',
+  },
+  progressContainer: {
+    backgroundColor: colors.lightgrey,
+    width: '95%',
+    height: 25,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 25,
+    marginVertical: 10,
+  },
+  progress: {
+    backgroundColor: colors.primary,
+    position: 'absolute',
+    height: '100%',
+    width: '30%',
+    alignSelf: 'flex-start',
+    borderRadius: 25,
   },
 });

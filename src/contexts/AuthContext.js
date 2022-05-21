@@ -7,7 +7,7 @@ export const AuthConext = createContext({
 });
 
 const AuthContextProvider = ({children}) => {
-  const [user, setUser] = useState('undefined');
+  const [user, setUser] = useState(null);
 
   const checkUser = async () => {
     try {
@@ -17,7 +17,7 @@ const AuthContextProvider = ({children}) => {
 
       setUser(authUser);
     } catch (e) {
-      setUser(null);
+      setUser('');
     }
   };
   useEffect(() => {

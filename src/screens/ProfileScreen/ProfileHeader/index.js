@@ -1,27 +1,22 @@
+import {useState, useEffect} from 'react';
 import {View, Text, Image} from 'react-native';
 import styles from './style';
-import {Button} from '../../../components';
+import {Button, UserImage} from '../../../components';
 import {useNavigation} from '@react-navigation/native';
-import {Auth} from 'aws-amplify';
+import {Auth, Storage} from 'aws-amplify';
 import {useAuthContext} from '../../../contexts/AuthContext';
 
 const ProfileHeader = ({user}) => {
   const navigation = useNavigation();
   const {userId} = useAuthContext();
+
   navigation.setOptions({
     title: user?.username || 'Profile',
   });
   return (
     <View style={styles.root}>
       <View style={styles.headerRow}>
-        <Image
-          source={
-            user.image
-              ? {uri: user.image}
-              : require('../../../assets/images/noUserImage.png')
-          }
-          style={styles.avatar}
-        />
+        <UserImage imageKey={user.image} width={100} />
         <View style={styles.numberContainer}>
           <Text style={styles.numberText}>{user?.nofPosts}</Text>
           <Text style={styles.text}>Posts</Text>

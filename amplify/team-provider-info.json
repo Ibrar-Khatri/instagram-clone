@@ -19,7 +19,7 @@
       "function": {
         "InstagramPostConfirmation": {
           "deploymentBucketName": "amplify-instagram-staging-143751-deployment",
-          "s3Key": "amplify-builds/InstagramPostConfirmation-784956436a5034724c67-build.zip"
+          "s3Key": "amplify-builds/InstagramPostConfirmation-386269645959364b5870-build.zip"
         }
       }
     }

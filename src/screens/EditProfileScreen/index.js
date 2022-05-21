@@ -7,9 +7,10 @@ import {useAuthContext} from '../../contexts/AuthContext';
 import {deleteUser, GetUser, updateUser, usersByUsername} from './queries';
 import {ApiErrorMessage} from '../../components';
 import {useNavigation} from '@react-navigation/native';
-import {Auth} from 'aws-amplify';
+import {Auth, Storage} from 'aws-amplify';
 import CustomInput from './CustomInput';
 import styles from './style';
+import {v4 as uuidv4} from 'uuid';
 
 const URL_REGEX =
   /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/;
@@ -48,13 +49,17 @@ const EditProfileScreen = () => {
   }, [user]);
 
   const onSubmit = async val => {
+    const input = {
+      id: userId,
+      ...val,
+      _version: user._version,
+    };
+    if (selectedPhoto.uri) {
+      input.image = await uploadMedia(selectedPhoto.uri);
+    }
     await doUpdateUser({
       variables: {
-        input: {
-          id: userId,
-          ...val,
-          _version: user._version,
-        },
+        input,
       },
     });
     if (navigation.canGoBack()) {
@@ -69,6 +74,21 @@ const EditProfileScreen = () => {
           setSelectedPhoto(assets[0]);
       },
     );
+  };
+
+  const uploadMedia = async uri => {
+    try {
+      const response = await fetch(uri);
+      const blob = await response.blob();
+
+      const uriParts = uri?.split('.');
+      const extention = uriParts[uriParts.length - 1];
+
+      const s3Response = await Storage.put(`${uuidv4()}.${extention}`, blob);
+      return s3Response.key;
+    } catch (e) {
+      Alert.alert('Error uplaoding the file', e.message);
+    }
   };
 
   const confirmDelete = () => {

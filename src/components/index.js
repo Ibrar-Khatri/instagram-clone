@@ -7,6 +7,7 @@ import Button from './Button';
 import FeedGridView from './FeedGridView';
 import UserListItem from './UserListItem';
 import ApiErrorMessage from './ApiErrorMessage';
+import UserImage from './UserImage';
 export {
   FeedPost,
   Comment,
@@ -17,4 +18,5 @@ export {
   FeedGridView,
   UserListItem,
   ApiErrorMessage,
+  UserImage,
 };

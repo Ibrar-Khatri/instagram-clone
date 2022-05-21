@@ -1,15 +1,17 @@
 import {useState} from 'react';
-import {View, Text, Image, ScrollView, Pressable} from 'react-native';
+import {View, Text, ScrollView, Pressable} from 'react-native';
 import colors from '../../theme/colors';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Feather from 'react-native-vector-icons/Feather';
 import styles from './style';
-import {Comment, DoublePressable, Carousel, VideoPlayer} from '../index';
+import {Comment} from '../index';
 import {useNavigation} from '@react-navigation/native';
 import FeedPostMenu from './FeedPostMenu';
 import useLikeService from '../../services/LikeService';
 import dayjs from 'dayjs';
+import Content from './Content';
+import UserImage from '../UserImage';
 
 const FeedPost = ({post, isVisible}) => {
   const [isDescExpended, setIsDescExpended] = useState(false);
@@ -33,44 +35,18 @@ const FeedPost = ({post, isVisible}) => {
     setIsDescExpended(v => !v);
   };
 
-  let content = null;
-  if (post.image) {
-    content = (
-      <DoublePressable onDoublePress={toggleLike}>
-        <Image
-          source={{
-            uri: post?.image,
-          }}
-          style={styles.image}
-        />
-      </DoublePressable>
-    );
-  } else if (post.images) {
-    content = <Carousel images={post.images} onDoublePress={toggleLike} />;
-  } else if (post.video) {
-    content = <VideoPlayer uri={post.video} paused={!isVisible} />;
-  }
-
   return (
     <ScrollView>
       <View style={styles.post}>
         <View style={styles.header}>
-          <Image
-            source={
-              post.User.image
-                ? {
-                    uri: post?.user?.image,
-                  }
-                : require('../../assets/images/noUserImage.png')
-            }
-            style={styles.avatarStyle}
-          />
+          <UserImage imageKey={post?.User?.image} />
           <Text style={styles.userName} onPress={navigateToUser}>
             {post?.User?.name}
           </Text>
           <FeedPostMenu post={post} />
         </View>
-        {content}
+        <Content post={post} isVisible={isVisible} toggleLike={toggleLike} />
+
         <View style={styles.footer}>
           <View style={styles.iconContainer}>
             <Pressable onPress={toggleLike}>

@@ -12,6 +12,7 @@ import colors from '../../../theme/colors';
 import {deletePost} from '../queries';
 import {useAuthContext} from '../../../contexts/AuthContext';
 import {useNavigation} from '@react-navigation/native';
+import {Storage} from 'aws-amplify';
 
 const FeedPostMenu = ({post}) => {
   const {userId} = useAuthContext();
@@ -26,7 +27,18 @@ const FeedPostMenu = ({post}) => {
   });
 
   const startDeleting = async () => {
-    const response = await doDeletePost();
+    if (post.image) {
+      await Storage.remove(post.image);
+    } else if (post.video) {
+      await Storage.remove(post.image);
+    } else if (post.images) {
+      await Promise.all(post.images.map(img => Storage.remove(img)));
+    }
+    try {
+      await doDeletePost();
+    } catch (e) {
+      Alert.alert('Failed to delete post', e?.message);
+    }
   };
   const onDeleteOptionPressed = () => {
     Alert.alert('Are you sure?', 'Deleting a post is permanent', [

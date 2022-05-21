@@ -14,6 +14,7 @@ const Stack = createNativeStackNavigator();
 
 const Navigation = () => {
   const {user, userId} = useAuthContext();
+
   const {data, loading, error} = useQuery(getUser, {
     variables: {
       id: userId,
@@ -22,7 +23,7 @@ const Navigation = () => {
 
   const userData = data?.getUser;
 
-  if (user == 'undefined' || loading) {
+  if (user == null || loading) {
     return (
       <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
         <ActivityIndicator />

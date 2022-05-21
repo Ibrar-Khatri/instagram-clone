@@ -29,6 +29,7 @@ function FormInput({
               placeholder={placeholder}
               style={styles.input}
               secureTextEntry={secureTextEntry}
+              placeholderTextColor={colors.black}
             />
           </View>
           {error && (

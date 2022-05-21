@@ -4,6 +4,7 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import colors from '../../theme/colors';
 import styles from './style';
 import dayjs from 'dayjs';
+import UserImage from '../UserImage';
 
 const Comment = ({comment, isNew, includeDetails = false}) => {
   const [isLiked, setIsLiked] = useState(false);
@@ -11,14 +12,7 @@ const Comment = ({comment, isNew, includeDetails = false}) => {
   return (
     <View style={styles.comment}>
       {includeDetails && (
-        <Image
-          source={
-            comment?.User?.image
-              ? {uri: comment?.User?.image}
-              : require('../../assets/images/noUserImage.png')
-          }
-          style={styles.avatar}
-        />
+        <UserImage imageKey={comment?.User?.image} width={40} />
       )}
 
       <View style={styles.middleColumn}>

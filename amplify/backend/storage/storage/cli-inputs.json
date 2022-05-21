@@ -1,0 +1,14 @@
+{
+  "resourceName": "storage",
+  "policyUUID": "a8de4001",
+  "bucketName": "instagram-clone-ibrar",
+  "storageAccess": "auth",
+  "guestAccess": [],
+  "authAccess": [
+    "CREATE_AND_UPDATE",
+    "READ",
+    "DELETE"
+  ],
+  "triggerFunction": "NONE",
+  "groupAccess": {}
+}
