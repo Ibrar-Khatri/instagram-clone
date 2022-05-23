@@ -8,11 +8,9 @@ export default StyleSheet.create({
     padding: 10,
   },
   avatar: {
-    width: '30%',
-    aspectRatio: 1,
+    width: 120,
+    height: 120,
     borderRadius: 100,
-    borderColor: colors.border,
-    borderWidth: 1,
   },
   textButton: {
     color: colors.primary,

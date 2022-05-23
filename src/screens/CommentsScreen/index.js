@@ -11,30 +11,34 @@ const CommentsScreen = () => {
   const route = useRoute();
   const {postId} = route.params;
   const [newComments, setNewComments] = useState([]);
-  const {data, loading, error, fetchMore} = useQuery(commentsByPost, {
+  const {data, loading, error, fetchMore, refetch} = useQuery(commentsByPost, {
     variables: {
       postID: postId,
-      sortDirection: 'DESC',
-      limit: 10,
+      sortDirection: 'ASC',
+      limit: 20,
     },
+    fetchPolicy: 'network-only',
   });
 
   const {data: newCommentsData} = useSubscription(onCreateCommentByPostId, {
     variables: {postID: postId},
   });
-  console.log('🚀 ~ newCommentsData', newComments);
   useEffect(() => {
     if (newCommentsData?.onCreateCommentByPostId) {
       setNewComments(existing => [
-        newCommentsData?.onCreateCommentByPostId,
         ...existing,
+        newCommentsData?.onCreateCommentByPostId,
       ]);
     }
   }, [newCommentsData]);
 
-  console.log('🚀 ~ comments', newComments);
   const comments =
-    data?.commentsByPost?.items?.filter(comment => !comment?._deleted) || [];
+    data?.commentsByPost?.items?.filter(
+      (comment, index, self) =>
+        !comment?._deleted &&
+        index === self.findIndex(t => t.id === comment.id),
+    ) || [];
+
   const [isFetchingMore, setIsFetchingMore] = useState(false);
   const nextToken = data?.commentsByPost?.nextToken;
 
@@ -61,18 +65,23 @@ const CommentsScreen = () => {
       />
     );
   }
+
   return (
     <View style={styles.commentsScreenView}>
       <FlatList
-        data={[...newComments, ...comments]}
+        data={[...comments, ...newComments]}
+        keyExtractor={it => it?.id}
         renderItem={({item}) =>
           item && (
             <Comment comment={item} includeDetails isNew={isNewComment(item)} />
           )
         }
         style={styles.flatListStyle}
-        inverted={true}
-        ListEmptyComponent={() => <Text>No comment, be the first Comment</Text>}
+        ListEmptyComponent={() => (
+          <Text style={{textAlign: 'center'}}>
+            No comment, be the first Comment
+          </Text>
+        )}
         onEndReached={loadMore}
       />
       <InputComment postId={postId} />

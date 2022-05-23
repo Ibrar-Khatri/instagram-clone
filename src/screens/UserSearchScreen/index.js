@@ -9,7 +9,7 @@ const UserSearchScreen = () => {
   if (loading) {
     return <ActivityIndicator />;
   }
-  if (loading) {
+  if (error) {
     return (
       <ApiErrorMessage title="Error fetching users" message={error?.message} />
     );

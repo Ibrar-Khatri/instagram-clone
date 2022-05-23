@@ -10,6 +10,7 @@ import HomeStackNavigator from './HomeStackNavigator';
 import ProfileStackNavigator from './ProfileStackNavigator';
 import SearchTabNavigator from './SearchTabNavigator';
 import UploadStackNavigator from './UploadStackNavigator';
+import NotificationScreen from '../screens/NotificationScreen';
 
 const Tab = createBottomTabNavigator();
 
@@ -56,7 +57,7 @@ const BottomTabNavigator = () => {
       />
       <Tab.Screen
         name="Notifications"
-        component={CameraScreen}
+        component={NotificationScreen}
         options={{
           tabBarIcon: ({color, size}) => (
             <MaterialCommunityIcons

@@ -56,7 +56,6 @@ const CreatePostScreen = () => {
     } else if (images) {
       const imageKeys = await Promise.all(images.map(img => uploadMedia(img)));
       input.images = imageKeys.filter(key => key);
-      console.log(input);
     } else if (video) {
       input.video = await uploadMedia(video);
     }

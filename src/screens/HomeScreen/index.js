@@ -5,7 +5,6 @@ import {ApiErrorMessage, FeedPost} from '../../components';
 import {postsByDate} from './queries';
 
 const HomeScreen = () => {
-  const [activePostId, setActivePostId] = useState(null);
   const [isFetchingMore, setIsFetchingMore] = useState(false);
   const {data, loading, error, refetch, fetchMore} = useQuery(postsByDate, {
     variables: {
@@ -15,8 +14,14 @@ const HomeScreen = () => {
     },
   });
 
+  const posts = (data?.postsByDate?.items || []).filter(
+    post => !post?._deleted,
+  );
+
+  const [activePostId, setActivePostId] = useState(posts?.length - 1);
+
   const viewabilityConfig = useRef({
-    itemVisiblePercentThreshold: 50,
+    viewAreaCoveragePercentThreshold: 50,
   });
 
   const onViewableItemsChanged = useRef(({viewableItems, changed}) => {
@@ -42,9 +47,6 @@ const HomeScreen = () => {
       <ApiErrorMessage title="Error fetching posts" message={error.message} />
     );
   }
-  const posts = (data?.postsByDate?.items || []).filter(
-    post => !post?._deleted,
-  );
 
   return (
     <FlatList

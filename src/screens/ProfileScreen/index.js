@@ -31,7 +31,6 @@ const ProfileScreen = () => {
     );
   }
 
-  console.log('🚀 ~ user.Posts.items', user.Posts.items);
   return (
     <FeedGridView
       data={user?.Posts?.items || []}

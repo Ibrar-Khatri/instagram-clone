@@ -14,20 +14,24 @@ const useCommentsServices = postId => {
   });
   const post = postData?.getPost;
 
-  const incrementNofComments = amount => {
+  const incrementNofComments = async amount => {
     if (!post) {
       Alert.alert('Failed to load post. Try again later');
       return;
     }
-    doUpdatePost({
-      variables: {
-        input: {
-          id: postId,
-          _version: post?._version,
-          nofComments: post.nofComments + amount,
+    try {
+      await doUpdatePost({
+        variables: {
+          input: {
+            id: postId,
+            _version: post?._version,
+            nofComments: post.nofComments + amount,
+          },
         },
-      },
-    });
+      });
+    } catch (e) {
+      Alert.alert('Failed to Update No. of Comments', e.message);
+    }
   };
 
   const onCreateComment = async newComment => {

@@ -18,8 +18,8 @@ const Content = ({post, isVisible, toggleLike}) => {
       const uri = await Storage.get(post.image);
       setImageUri(uri);
     } else if (post.images) {
-      const uris = await Promise.all(post.images.map(img => Storage.get(img)));
-      setImagesUri(uris);
+      const uri = await Promise.all(post.images.map(img => Storage.get(img)));
+      setImagesUri(uri);
     } else if (post.video) {
       const uri = await Storage.get(post.video);
       setVideoUri(uri);

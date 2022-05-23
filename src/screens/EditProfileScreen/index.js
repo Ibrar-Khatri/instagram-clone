@@ -17,6 +17,7 @@ const URL_REGEX =
 
 const EditProfileScreen = () => {
   const [selectedPhoto, setSelectedPhoto] = useState(null);
+  const [imageUri, setImageUri] = useState(null);
   const {userId, user: authUser} = useAuthContext();
 
   const {data, loading, error} = useQuery(GetUser, {
@@ -46,6 +47,17 @@ const EditProfileScreen = () => {
       setValue('bio', user?.bio);
       setValue('website', user?.website);
     }
+    if (!user?.image) {
+      return;
+    }
+    (async function () {
+      try {
+        const resp = await Storage.get(user.image);
+        setImageUri(resp);
+      } catch (e) {
+        Alert.alert('Error uplaoding the file', e.message);
+      }
+    })();
   }, [user]);
 
   const onSubmit = async val => {
@@ -54,7 +66,7 @@ const EditProfileScreen = () => {
       ...val,
       _version: user._version,
     };
-    if (selectedPhoto.uri) {
+    if (selectedPhoto?.uri) {
       input.image = await uploadMedia(selectedPhoto.uri);
     }
     await doUpdateUser({
@@ -84,7 +96,7 @@ const EditProfileScreen = () => {
       const uriParts = uri?.split('.');
       const extention = uriParts[uriParts.length - 1];
 
-      const s3Response = await Storage.put(`${uuidv4()}.${extention}`, blob);
+      const s3Response = await Storage.put(`${user?.id}.${extention}`, blob);
       return s3Response.key;
     } catch (e) {
       Alert.alert('Error uplaoding the file', e.message);
@@ -154,10 +166,15 @@ const EditProfileScreen = () => {
       />
     );
   }
+
   return (
     <ScrollView contentContainerStyle={styles.page}>
       <Image
-        source={{uri: selectedPhoto?.uri || user.image}}
+        source={
+          selectedPhoto?.uri || imageUri
+            ? {uri: selectedPhoto?.uri || imageUri}
+            : require('../../assets/images/noUserImage.png')
+        }
         style={styles.avatar}
       />
       <Text style={styles.textButton} onPress={changePhoto}>
